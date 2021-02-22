@@ -29,6 +29,11 @@ sprites.onCreated(SpriteKind.п, function (sprite) {
     sprite.z = -1000
     sprite.setFlag(SpriteFlag.DestroyOnWall, true)
 })
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.fire, 500)
+    music.playMelody("C5 C C5 A F C5 E F ", 600)
+    info.changeScoreBy(1)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.яма, function (sprite, otherSprite) {
     тачка.destroy(effects.disintegrate, 500)
     music.smallCrash.play()
@@ -37,6 +42,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.яма, function (sprite, otherS
 })
 let разметка: Sprite = null
 let mySprite: Sprite = null
+let mySprite2: Sprite = null
 let projectile: Sprite = null
 let тачка: Sprite = null
 scene.setBackgroundImage(assets.image`myImage`)
@@ -62,6 +68,29 @@ controller.moveSprite(тачка, 50, 10)
 тачка.y = 100
 тачка.setStayInScreen(true)
 tiles.setTilemap(tilemap`уровень1`)
+game.onUpdateInterval(5000, function () {
+    mySprite2 = sprites.create(img`
+        . . . 5 5 d d d d d d 5 5 . . . 
+        . . d 7 7 7 7 7 7 7 7 7 7 d . . 
+        . . d 7 7 7 7 7 7 7 7 7 7 d . . 
+        . . d 7 8 8 8 8 8 8 8 8 7 d . . 
+        . . d 7 8 8 8 8 8 8 8 8 7 d . . 
+        . . . 7 8 8 8 8 8 8 8 8 7 . . . 
+        . . . 7 7 7 7 7 7 7 5 7 7 . . . 
+        . . . 7 7 7 7 7 7 5 7 7 7 . . . 
+        . . . 7 7 7 7 7 5 7 7 7 7 . . . 
+        . . . 7 7 7 7 5 5 5 7 7 7 . . . 
+        . . . 7 7 7 7 7 5 7 7 7 7 . . . 
+        . . d 7 7 7 7 5 7 7 7 7 7 d . . 
+        . . d 7 7 7 5 7 7 7 7 7 7 d . . 
+        . . d 7 7 8 8 8 8 8 8 7 7 d . . 
+        . . d 7 7 8 8 8 8 8 8 7 7 d . . 
+        . . . 2 2 2 7 7 7 7 2 2 2 . . . 
+        `, SpriteKind.Enemy)
+    mySprite2.setPosition(48 + 32 * randint(0, 2), 0)
+    mySprite2.setVelocity(0, 19)
+    mySprite2.setFlag(SpriteFlag.DestroyOnWall, true)
+})
 game.onUpdateInterval(1013, function () {
     mySprite = sprites.create(img`
         . . . . . . . . c c c c . . . . 
@@ -81,7 +110,7 @@ game.onUpdateInterval(1013, function () {
         . . . . c b b a a 6 b c . . . . 
         . . . . . . b 6 6 c c . . . . . 
         `, SpriteKind.яма)
-    mySprite.x = 48 + 16 * randint(0, 4)
+    mySprite.x = 32 + 16 * randint(0, 6)
     mySprite.y = 0
     mySprite.z = -100
     mySprite.vy = 100
@@ -126,7 +155,4 @@ game.onUpdateInterval(350, function () {
         . . . . . . . 1 1 1 . . . . . . 
         `, SpriteKind.п)
     разметка.x = 96
-})
-game.onUpdateInterval(500, function () {
-	
 })
